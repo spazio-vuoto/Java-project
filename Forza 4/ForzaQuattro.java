@@ -1,18 +1,18 @@
 import java.util.Scanner;
 
-public class ForzaQuattro{
+public class proveForza4{
 
     static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args){
 
-        String scelta = "";//scelta che deve fare l'utente se giocare da solo con qualcuno o uscire
+        String scelta = "";//scelta che deve fare l'utente se giocare da solo o uscire
         boolean esciScelta = false;
         boolean esciGioco = false;
-        boolean vittoria = false;//serve per vedere se ha vinto così se uno vince esce dal ciclo
+        boolean vittoria = false;//serve per vedere se ha vinto, così se uno vince esce dal ciclo
         int sceltaX;//scelta per dove vuole mettere la X
         int sceltaO;//scelta per dove vuole mettere la O
         int count = 0;//serve per sapere se mette X o O (quando è pari è X quando è dispari è O)
-
+        
         String[][] campoGioco = {
             {" ","1","2","3","4","5","6","7"},
             {" ","-","-","-","-","-","-","-"},
@@ -31,15 +31,14 @@ public class ForzaQuattro{
         while(esciScelta == false){
 
             System.out.println("Cosa vuoi fare? ");
-            System.out.println("Giocare da solo scrivi gioco, giocare con un altro giocatore scrivi giocatore, uscire scrivi esci");
+            System.out.println("Iniziare una partita scrivi gioco, uscire scrivi esci");
 
             //prendo l'input dall'utente
             scelta = scanner.nextLine().toLowerCase();
             if(scelta.equals("gioco")){
                 esciScelta = true;
-            }else if(scelta.equals("giocatore")){
-                esciScelta = true;
             }else if(scelta.equals("esci")){
+                System.out.println("Alla prossima!");
                 esciScelta = true;
                 esciGioco = true;
             }else{
@@ -50,21 +49,17 @@ public class ForzaQuattro{
         while(esciGioco == false){
             switch(scelta){
                 case "gioco":
-                    //do something
                     while(vittoria == false){
                         if(campoPieno(campoGioco) ==  true){
                             System.out.println("Il campo da gioco è pieno quindi avete finito in pareggio");
                             vittoria = true;
-                        }else if(vittoria(campoGioco) == true){
-                            //se count è pari significa che deve mettere la X quindi significa che l'ultima mossa l'ha
-                            //fatta il secondo giocatore con la O e quindi vince lui(nella condizione c'è il contrario)
-                            if(count % 2 != 0){
-                                System.out.println("Congratulazioni Primo giocatore hai vinto!!!");
-                                System.out.println("Mi dispiace per te Secondo giocatore ma hai perso");
-                            }else{
-                                System.out.println("Congratulazioni Secondo giocatore hai vinto!!!");
-                                System.out.println("Mi dispiace per te Primo giocatore ma hai perso");
-                            }
+                        }else if(vittoria(campoGioco, "X") == true){
+                            System.out.println("Congratulazioni Primo giocatore hai vinto!!!");
+                            System.out.println("Mi dispiace per te Secondo giocatore ma hai perso");
+                            vittoria = true;
+                        }else if(vittoria(campoGioco, "O") == true){
+                            System.out.println("Congratulazioni Secondo giocatore hai vinto!!!");
+                            System.out.println("Mi dispiace per te Primo giocatore ma hai perso");
                             vittoria = true;
                         }else if(count % 2 == 0){
                             sceltaX = sceltaXO(campoGioco, "X");
@@ -79,15 +74,12 @@ public class ForzaQuattro{
                         }
                         count++;
                     }
-                    //da togliere serve solo ora come prova prima di far in modo che il giocatore esca
-                    esciGioco = true;
-                    break;
                 case "giocatore":
                     //do something
                     break;
+                }
             }
-        }
-    }
+}
 
     //metodo per mettere la X o la O nella matrice
     public static void metteXO(String[][] campoGioco, String simbolo, int sceltaX){
@@ -100,7 +92,7 @@ public class ForzaQuattro{
     }
 
     // Metodo per verificare se c'è una vittoria in Forza 4
-    public static boolean vittoria(String[][] campoGioco){
+    public static boolean vittoria(String[][] campoGioco, String XO){
 
         boolean vittoria = false; //boolean per sapere se ha vinto o meno
 
@@ -108,7 +100,7 @@ public class ForzaQuattro{
         for(int i = 1; i < campoGioco.length; i++){
             for(int j = 1; j < campoGioco[i].length; j++){
                 if(j < campoGioco[i].length - 3){
-                    if(!campoGioco[i][j].equals("-") &&
+                    if(campoGioco[i][j].equals(XO) &&
                         campoGioco[i][j].equals(campoGioco[i][j + 1]) && 
                         campoGioco[i][j].equals(campoGioco[i][j + 2]) &&
                         campoGioco[i][j].equals(campoGioco[i][j + 3])){
@@ -122,7 +114,7 @@ public class ForzaQuattro{
         for(int i = 1; i < campoGioco.length; i++){
             for(int j = 1; j < campoGioco[i].length; j++){
                 if(i < campoGioco.length - 3){
-                    if(!campoGioco[i][j].equals("-") &&
+                    if(campoGioco[i][j].equals(XO) &&
                         campoGioco[i][j].equals(campoGioco[i + 1][j]) && 
                         campoGioco[i][j].equals(campoGioco[i + 2][j]) &&
                         campoGioco[i][j].equals(campoGioco[i + 3][j])){
@@ -133,11 +125,10 @@ public class ForzaQuattro{
         }
 
         //verifica se in una diagonale (/) ci sono 4 caselle prese dal primo o dal secondo giocatore
-        for(int i = 1; i < campoGioco.length; i++){
-            for(int j = 1; j < campoGioco[i].length; j++){
-                if(i < campoGioco.length - 3){
-                    if((campoGioco[i][j].equals("X") ||
-                        campoGioco[i][j].equals("O")) &&
+        for(int i = 1; i < campoGioco.length; i++) {
+            for(int j = 1; j < campoGioco[i].length; j++) {
+                if(i < campoGioco.length - 3) {
+                    if(campoGioco[i][j].equals(XO) &&
                         campoGioco[i][j].equals(campoGioco[i + 1][j - 1]) && 
                         campoGioco[i][j].equals(campoGioco[i + 2][j - 2]) &&
                         campoGioco[i][j].equals(campoGioco[i + 3][j - 3])){
@@ -150,9 +141,8 @@ public class ForzaQuattro{
         //verifica se in una diagonale (\) ci sono 4 caselle prese dal primo o dal secondo giocatore
         for(int i = 1; i < campoGioco.length; i++){
             for(int j = 1; j < campoGioco[i].length; j++){
-                if(i < campoGioco.length - 3 && j < campoGioco.length - 3){
-                    if((campoGioco[i][j].equals("X") ||
-                        campoGioco[i][j].equals("O")) &&
+                if(i < campoGioco.length - 3 && j < campoGioco[i].length - 3){
+                    if(campoGioco[i][j].equals(XO) &&
                         campoGioco[i][j].equals(campoGioco[i + 1][j + 1]) && 
                         campoGioco[i][j].equals(campoGioco[i + 2][j + 2]) &&
                         campoGioco[i][j].equals(campoGioco[i + 3][j + 3])){
@@ -236,3 +226,7 @@ public class ForzaQuattro{
 /*if(vittoria(campoGioco) == true){ 
     System.out.println("Hai vinto");
 }*/
+
+//scritto perchè non volevo eliminarlo quelllo sotto
+//se count è pari significa che deve mettere la X quindi significa che l'ultima mossa l'ha
+//fatta il secondo giocatore con la O e quindi vince lui(nella condizione c'è il contrario)
