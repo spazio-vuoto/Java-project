@@ -84,7 +84,7 @@ public class proveForza4{
     //metodo per mettere la X o la O nella matrice
     public static void metteXO(String[][] campoGioco, String simbolo, int sceltaX){
         for(int i = campoGioco.length - 1, messo = 0; i >= 0 && messo == 0; i--){
-            if(campoGioco[i][sceltaX] == "-"){
+            if(campoGioco[i][sceltaX].equals("-")){
                 campoGioco[i][sceltaX] = simbolo;
                 messo = 1;
             }
